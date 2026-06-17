@@ -11,7 +11,6 @@ describe('Pokedex', () => {
     await page.goto('/')
     const ivysaurLink = page.getByText('ivysaur')
     await ivysaurLink.click()
-    
     await expect(page.getByText('chlorophyll')).toBeVisible()
   })
 })
