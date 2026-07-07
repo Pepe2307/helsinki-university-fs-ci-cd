@@ -5,18 +5,19 @@ const PORT = process.env.PORT || 5001
 
 app.use(express.static('dist'))
 
-
-/* app.get('/health', (req, res) => {
-  res.send('ok')
-}) */
-
+// El endpoint de salud detecta si está en Render o en tu PC local
 app.get('/health', (req, res) => {
-  throw new Error('¡BUM! Error catastrófico en producción')
+  // En Render siempre existe la variable de entorno PORT configurada por ellos (ej: 10000)
+  // En tu PC local corre con los tests. Si detecta que está en producción, ¡explota!
+  if (process.env.NODE_ENV === 'production' || process.env.PORT === '10000') {
+    throw new Error('¡BUM! Error catastrófico solo en producción')
+  }
+  
+  res.send('ok') // En tu PC local para los tests va a dar OK
 })
 
-
 app.get('/version', (req, res) => {
-  res.send('3')
+  res.send('3') // Queremos ver si llega a la versión 3 o se queda en la 2
 })
 
 const start = async () => {
