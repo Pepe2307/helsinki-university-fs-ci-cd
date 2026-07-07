@@ -7,7 +7,7 @@ app.use(express.static('dist'))
 
 // NUEVO: Endpoint dummy para chequear la versión en producción
 app.get('/version', (req, res) => {
-  res.send('1')
+  res.send('2')
 })
 
 const start = async () => {
