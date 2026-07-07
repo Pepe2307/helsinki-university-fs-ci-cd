@@ -5,15 +5,20 @@ const PORT = process.env.PORT || 5001
 
 app.use(express.static('dist'))
 
-// NUEVO: Endpoint para el control de salud de Render
-app.get('/health', (req, res) => {
+
+/* app.get('/health', (req, res) => {
   res.send('ok')
+}) */
+
+app.get('/health', (req, res) => {
+  throw new Error('¡BUM! Error catastrófico en producción')
 })
 
-// Tu endpoint anterior de versión
+
 app.get('/version', (req, res) => {
-  res.send('2')
+  res.send('3')
 })
+
 const start = async () => {
   await app.listen(PORT)
   // eslint-disable-next-line no-console
