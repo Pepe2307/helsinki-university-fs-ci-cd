@@ -1,0 +1,17 @@
+name: Periodic Health Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  periodic_health_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed service URL
+        uses: jason2866/action-http-ping@v4
+        with:
+          url: 'https://helsinki-university-fs-ci-cd.onrender.com/health'
+          status-code: 200
+          timeout: 5000
