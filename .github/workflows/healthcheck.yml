@@ -1,0 +1,19 @@
+name: Periodic Health Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' 
+
+jobs:
+  periodic_health_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed service URL
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://helsinki-university-fs-ci-cd.onrender.com/health)
+          echo "HTTP Response code: $RESPONSE"
+          if [ "$RESPONSE" != "200" ]; then
+            echo "Health check failed with status $RESPONSE"
+            exit 1
+          fi
