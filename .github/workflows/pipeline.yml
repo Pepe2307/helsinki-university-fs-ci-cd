@@ -47,17 +47,17 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           title: "Build failed!"
-          description: "Commit ${{ github.sha }} by ${{ github.actor }} broke the build."
+          description: "Commit ${{ github.sha }} by ${{ github.actor }} broke the pipeline."
           color: 0xff0000
 
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
     steps:
       - uses: actions/checkout@v6
 
       - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         uses: anothrNick/github-tag-action@4ed44965e0db8dab2b466a16da04aec3cc312fd8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
 
       - name: Notify Success on Discord
         uses: sarisia/actions-status-discord@v1
-        if: ${{ success() && github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+        if: ${{ success() }}
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
