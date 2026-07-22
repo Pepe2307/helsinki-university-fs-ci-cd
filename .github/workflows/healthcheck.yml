@@ -1,9 +1,9 @@
 name: Periodic Health Check
 
 on:
-  workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub Actions
+  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *' # Corre una vez al día (a la medianoche UTC)
+    - cron: '0 0 * * *'
 
 jobs:
   periodic_health_check:
@@ -17,3 +17,13 @@ jobs:
             echo "Health check failed with status $RESPONSE"
             exit 1
           fi
+
+      - name: Notify Discord on Failure
+        uses: sarisia/actions-status-discord@v1
+        if: ${{ failure() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: Failure
+          title: "🚨 Alert: Production Health Check Failed!"
+          description: "The periodic health check for the Pokedex app on Render has failed."
+          color: 0xff0000
